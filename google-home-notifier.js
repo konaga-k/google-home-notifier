@@ -1,6 +1,6 @@
 var Client = require('castv2-client').Client;
 var DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver;
-var mdns = require('mdns');
+var mdns = require('mdns-js');
 var browser = mdns.createBrowser(mdns.tcp('googlecast'));
 var deviceAddress;
 var language;
@@ -26,16 +26,18 @@ var accent = function(accent) {
 
 var notify = function(message, callback) {
   if (!deviceAddress){
-    browser.start();
-    browser.on('serviceUp', function(service) {
-      console.log('Device "%s" at %s:%d', service.name, service.addresses[0], service.port);
-      if (service.name.includes(device.replace(' ', '-'))){
+    browser.on('ready', function () {
+      browser.discover();
+    });
+    browser.on('update', function(service) {
+      console.log('Device "%s" at %s:%d', service.fullname, service.addresses[0], service.port);
+      if (service.fullname != undefined && service.fullname.includes(device.replace(' ', '-'))){
         deviceAddress = service.addresses[0];
         getSpeechUrl(message, deviceAddress, function(res) {
           callback(res);
         });
+        browser.stop();
       }
-      browser.stop();
     });
   }else {
     getSpeechUrl(message, deviceAddress, function(res) {
@@ -46,16 +48,18 @@ var notify = function(message, callback) {
 
 var play = function(mp3_url, callback) {
   if (!deviceAddress){
-    browser.start();
-    browser.on('serviceUp', function(service) {
-      console.log('Device "%s" at %s:%d', service.name, service.addresses[0], service.port);
-      if (service.name.includes(device.replace(' ', '-'))){
+    browser.on('ready', function () {
+      browser.discover();
+    });
+    browser.on('update', function(service) {
+      console.log('Device "%s" at %s:%d', service.fullname, service.addresses[0], service.port);
+      if (service.fullname.includes(device.replace(' ', '-'))){
         deviceAddress = service.addresses[0];
         getPlayUrl(mp3_url, deviceAddress, function(res) {
           callback(res);
         });
+        browser.stop();
       }
-      browser.stop();
     });
   }else {
     getPlayUrl(mp3_url, deviceAddress, function(res) {
@@ -65,7 +69,7 @@ var play = function(mp3_url, callback) {
 };
 
 var getSpeechUrl = function(text, host, callback) {
-  googletts(text, language, 1, 1000, googlettsaccent).then(function (url) {
+  googletts(text, language, 1).then(function (url) {
     onDeviceUp(host, url, function(res){
       callback(res)
     });
@@ -75,9 +79,9 @@ var getSpeechUrl = function(text, host, callback) {
 };
 
 var getPlayUrl = function(url, host, callback) {
-    onDeviceUp(host, url, function(res){
-      callback(res)
-    });
+  onDeviceUp(host, url, function(res){
+    callback(res)
+  });
 };
 
 var onDeviceUp = function(host, url, callback) {
