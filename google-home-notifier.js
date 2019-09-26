@@ -1,7 +1,7 @@
 var Client = require('castv2-client').Client;
 var DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver;
 var mdns = require('mdns-js');
-var browser = mdns.createBrowser(mdns.tcp('googlecast'));
+var browser = mdns.createBrowser();
 var deviceAddress;
 var language;
 
