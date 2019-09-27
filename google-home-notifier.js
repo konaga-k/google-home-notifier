@@ -3,12 +3,13 @@ var DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver;
 var mdns = require('mdns-js');
 var browser = mdns.createBrowser(mdns.tcp('googlecast'));
 var deviceAddress;
+var deviceName;
 var language;
 
 var device = function(name, lang = 'en') {
-    device = name;
-    language = lang;
-    return this;
+  deviceName = name;
+  language = lang;
+  return this;
 };
 
 var ip = function(ip, lang = 'en') {
