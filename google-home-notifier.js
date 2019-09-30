@@ -1,7 +1,6 @@
 var Client = require('castv2-client').Client;
 var DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver;
 var mdns = require('mdns-js');
-var arpjs = require('arpjs');
 var browser = mdns.createBrowser(mdns.tcp('googlecast'));
 var deviceAddress;
 var deviceName;
@@ -23,19 +22,19 @@ var ip = function(ip, lang = 'en') {
 };
 
 var mac = async function (mac, lang = 'en') {
-  var arpTable = await arpTablePromise();
-  deviceAddress = arpTable.find((record) => {
-    return (record.mac == mac);
-  }).ip;
+  // var arpTable = await arpTablePromise();
+  // deviceAddress = arpTable.find((record) => {
+  //   return (record.mac == mac);
+  // }).ip;
   language = lang;
   return this;
 };
 
-var arpTablePromise = () => new Promise((resolve) => {
-  arpjs.table(function (err, table) {
-    resolve(table);
-  });
-});
+// var arpTablePromise = () => new Promise((resolve) => {
+//   arpjs.table(function (err, table) {
+//     resolve(table);
+//   });
+// });
 
 var googletts = require('google-tts-api');
 var googlettsaccent = 'us';

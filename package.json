@@ -19,7 +19,6 @@
     "express": "^4.14.0",
     "google-tts-api": "0.0.4",
     "mdns-js": "^1.0.3",
-    "ngrok": "^2.2.4",
-    "arpjs": "^1.2.0"
+    "ngrok": "^2.2.4"
   }
 }
